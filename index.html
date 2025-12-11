@@ -1,105 +1,82 @@
 <!DOCTYPE html>
-const PASS = "20110914";
 <html lang="ja">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Amazon ギフト管理</title>
+<title>Amazonギフト管理</title>
 <style>
     body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-        background: #f2f2f2;
-        color: #111;
-        text-align: center;
+        font-family: sans-serif;
+        padding: 20px;
+        background: #f4f4f4;
+        font-size: 18px;
     }
 
-    .container {
-        max-width: 600px;
-        margin: 0 auto;
-        padding: 25px;
-    }
-
-    h1 {
-        font-size: 2rem;
-        margin-bottom: 20px;
+    #password-screen, #main {
+        max-width: 480px;
+        margin: auto;
+        background: white;
+        padding: 20px;
+        border-radius: 15px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.15);
     }
 
     input, button {
         width: 100%;
-        padding: 18px;
+        padding: 14px;
         margin-top: 12px;
-        border-radius: 12px;
-        border: 1px solid #333;
-        font-size: 1.2rem;
+        font-size: 18px;
+        border-radius: 10px;
+        border: 1px solid #ccc;
+        box-sizing: border-box;
     }
 
     button {
         background: #000;
-        color: white;
+        color: #fff;
         border: none;
-        font-weight: bold;
+        cursor: pointer;
     }
 
-    button:hover {
-        opacity: 0.8;
-    }
-
-    .item {
-        background: white;
-        border-radius: 15px;
-        padding: 20px;
-        margin-top: 20px;
-        text-align: left;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        font-size: 1.2rem;
+    .gift-item {
+        background: #fff;
+        padding: 15px;
+        margin-top: 12px;
+        border-radius: 12px;
+        border: 1px solid #ddd;
+        font-size: 18px;
     }
 
     .gift-code {
-        font-size: 1.5rem;
-        font-weight: bold;
-        color: #0000cc;
-        word-break: break-all;
+        font-size: 22px;
+        color: #0066ff;
+        margin-top: 8px;
+        cursor: pointer;
     }
 
-    .delete-btn {
-        background: #ff3333;
-        padding: 12px;
-        margin-top: 15px;
-        width: 100%;
-        border-radius: 10px;
-        border: none;
-        color: white;
-        font-size: 1.1rem;
-        font-weight: bold;
-    }
-
-    .delete-btn:hover {
-        opacity: 0.8;
+    @media (max-width: 600px) {
+        body { font-size: 20px; padding: 15px; }
+        input, button { font-size: 20px; padding: 16px; }
+        .gift-code { font-size: 23px; }
     }
 </style>
 </head>
 <body>
-<div class="container">
-    <h1>Amazon ギフト管理</h1>
 
-    <p>パスワード（20110914）</p>
+<div id="password-screen">
+    <h2>パスワード入力</h2>
     <input type="password" id="password" placeholder="パスワードを入力" />
     <button onclick="openList()">開く</button>
+</div>
 
-    <div id="main" style="display:none; margin-top:25px;">
-        <div id="main" style="display:none; margin-top:25px;">
-    <input type="text" id="search" placeholder="検索（例：10円・2025・コード）" oninput="loadList()" />
-
+<div id="main" style="display:none; margin-top:25px;">
+    <input type="text" id="search" placeholder="検索（10円・2025・コード）」" oninput="loadList()" />
     <input type="text" id="amount" placeholder="金額" />
-    <input type="date" id="limit" placeholder="有効期限" />
+    <input type="date" id="limit" />
     <input type="text" id="code" placeholder="ギフトコード" />
     <button onclick="addCode()">追加</button>
 
-
-        <div id="list"></div>
-    </div>
+    <div id="list"></div>
 </div>
 
 <script>
@@ -108,38 +85,12 @@ const PASS = "20110914";
 function openList() {
     const pw = document.getElementById("password").value;
     if (pw === PASS) {
+        document.getElementById("password-screen").style.display = "none";
         document.getElementById("main").style.display = "block";
         loadList();
     } else {
         alert("パスワードが違います");
     }
-}
-
-function loadList() {
-    const data = JSON.parse(localStorage.getItem("giftStore") || "[]");
-    const list = document.getElementById("list");
-    list.innerHTML = "";
-    const keyword = document.getElementById("search")?.value || "";
-const filtered = data.filter(item =>
-    item.amount.includes(keyword) ||
-    item.limit.includes(keyword) ||
-    item.code.includes(keyword)
-);
-
-
-    filtered.forEach((item, index) => {
-        const div = document.createElement("div");
-        div.className = "item";
-
-        div.innerHTML = `
-            <p>金額：${item.amount}</p>
-            <p>有効期限：${item.limit}</p>
-            <p class="gift-code" onclick="copyCode('${item.code}')">${item.code}</p>
-            <button class="delete-btn" onclick="deleteCode(${index})">削除</button>
-        `;
-
-        list.appendChild(div);
-    });
 }
 
 function addCode() {
@@ -148,7 +99,7 @@ function addCode() {
     const code = document.getElementById("code").value;
 
     if (!amount || !limit || !code) {
-        alert("全部入力してね");
+        alert("すべて入力してください");
         return;
     }
 
@@ -163,22 +114,45 @@ function addCode() {
     loadList();
 }
 
-function deleteCode(index) {
-    if (!confirm("本当に削除しますか？")) return;
-
+function loadList() {
     const data = JSON.parse(localStorage.getItem("giftStore") || "[]");
-    data.splice(index, 1);
-    localStorage.setItem("giftStore", JSON.stringify(data));
-    loadList();
+    const list = document.getElementById("list");
+    const keyword = document.getElementById("search").value || "";
+
+    list.innerHTML = "";
+
+    const filtered = data.filter(item =>
+        item.amount.includes(keyword) ||
+        item.limit.includes(keyword) ||
+        item.code.includes(keyword)
+    );
+
+    filtered.forEach((item, index) => {
+        const div = document.createElement("div");
+        div.className = "gift-item";
+        div.innerHTML = `
+            <p>金額：${item.amount}</p>
+            <p>期限：${item.limit}</p>
+            <p class="gift-code" onclick="copyCode('${item.code}')">コード：${item.code}</p>
+            <button onclick="deleteCode(${index})">削除</button>
+        `;
+        list.appendChild(div);
+    });
 }
 
 function copyCode(text) {
-    navigator.clipboard.writeText(text).then(() => {
-        if (window.navigator.vibrate) {
-            navigator.vibrate(100);
-        }
-        alert("コピーしたよ！");
-    });
+    navigator.clipboard.writeText(text);
+    if (navigator.vibrate) navigator.vibrate(80);
+    alert("コピーしました！");
+}
+
+function deleteCode(i) {
+    if (!confirm("本当に削除しますか？")) return;
+
+    const data = JSON.parse(localStorage.getItem("giftStore") || "[]");
+    data.splice(i, 1);
+    localStorage.setItem("giftStore", JSON.stringify(data));
+    loadList();
 }
 </script>
 
