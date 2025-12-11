@@ -90,3 +90,13 @@ function deleteCode(index) {
     localStorage.setItem("codes", JSON.stringify(data));
     loadCodes();
 }
+// ギフトコードをタップでコピー
+document.addEventListener("click", function (e) {
+    if (e.target.classList.contains("gift-code")) {
+        const code = e.target.innerText;
+
+        navigator.clipboard.writeText(code).then(() => {
+            alert("コピーしました: " + code);
+        });
+    }
+});
