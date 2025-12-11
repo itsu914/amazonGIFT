@@ -99,4 +99,26 @@ document.addEventListener("click", function (e) {
             alert("コピーしました: " + code);
         });
     }
+    // ギフトコードをタップでコピー（iPhone対応 & バイブ）
+document.addEventListener("click", async function (e) {
+    if (e.target.classList.contains("gift-code")) {
+        const codeText = e.target.innerText.replace("コード: ", "");
+
+        try {
+            // クリップボードにコピー
+            await navigator.clipboard.writeText(codeText);
+
+            // バイブさせる（iPhone対応）
+            if ("vibrate" in navigator) {
+                navigator.vibrate(100);
+            }
+
+            // トーストみたいに出す
+            alert("コピーしました！");
+        } catch (err) {
+            alert("コピーに失敗しました…");
+        }
+    }
+});
+
 });
