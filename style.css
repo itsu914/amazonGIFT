@@ -1,29 +1,50 @@
 body {
     font-family: sans-serif;
-    background: #f4f4f4;
+    background: #f3f3f3;
     padding: 20px;
+    margin: 0;
 }
 
-.hidden {
-    display: none;
-}
-
-#password-screen,
-#main-screen {
-    max-width: 500px;
+#password-screen, #code-screen {
+    max-width: 400px;
     margin: auto;
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 0 10px #ccc;
 }
 
-.item {
-    background: white;
+input {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    border-radius: 8px;
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 15px;
+    background: #007bff;
+    border: none;
+    color: white;
+    border-radius: 8px;
+    font-size: 16px;
+}
+
+.gift-box {
+    background: #fff;
     padding: 12px;
     margin-top: 12px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-radius: 10px;
+    box-shadow: 0 0 5px #ccc;
 }
 
-.gift-code {
-    color: blue;
-    font-weight: bold;
-    cursor: pointer;
+.copy-btn {
+    margin-top: 10px;
+    background: #28a745;
+    padding: 10px;
+    color: white;
+    border-radius: 8px;
+    width: 100%;
 }
