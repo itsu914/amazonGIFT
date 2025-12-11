@@ -3,33 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ギフトコード管理</title>
-    <link rel="stylesheet" href="./amazonGIFT/style.css">
+    <title>ギフトコード一覧</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 <div id="password-screen">
-    <h2>パスワード入力</h2>
-    <input type="password" id="password-input" placeholder="パスワード">
-    <button id="password-btn">開く</button>
-    <p id="password-error" style="color:red;"></p>
+    <h2>パスワードを入力</h2>
+    <input id="password-input" type="password" placeholder="パスワード">
+    <button id="open-btn">開く</button>
+    <p id="pw-error"></p>
 </div>
 
-<div id="main-screen" class="hidden">
-    <h1>ギフトコード管理</h1>
-    <button id="add-btn">➕ 追加</button>
-    <button id="open-btn">📂 開く</button>
-
-    <div id="form-area" class="hidden">
-        <input id="amount" type="number" placeholder="金額">
-        <input id="expire" type="date">
-        <input id="code" type="text" placeholder="ギフトコード">
-        <button id="save-btn">保存</button>
-    </div>
-
-    <div id="list"></div>
+<div id="code-screen" style="display: none;">
+    <h2>ギフトコード一覧</h2>
+    <div id="code-list"></div>
 </div>
 
-<script src="./amazonGIFT/script.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
