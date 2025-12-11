@@ -1,83 +1,94 @@
-document.addEventListener("DOMContentLoaded", () => {
-    loadList();
+const PASSWORD = "Itsuki914";
 
-    document.getElementById("add-button").addEventListener("click", () => {
-        const amount = document.getElementById("amount").value;
-        const expire = document.getElementById("expire").value;
-        const code = document.getElementById("code").value;
-
-        if (!amount || !expire || !code) {
-            alert("全て入力してください");
-            return;
-        }
-
-        const password = prompt("パスワードを入力してください");
-        if (password !== "20110914") {
-            alert("パスワードが違います");
-            return;
-        }
-
-        const item = { amount, expire, code };
-
-        let data = JSON.parse(localStorage.getItem("giftList") || "[]");
-        data.push(item);
-        localStorage.setItem("giftList", JSON.stringify(data));
-
-        loadList();
-
-        document.getElementById("amount").value = "";
-        document.getElementById("expire").value = "";
-        document.getElementById("code").value = "";
-    });
+// 画面切り替え
+document.getElementById("password-btn").addEventListener("click", () => {
+    if (document.getElementById("password-input").value === PASSWORD) {
+        document.getElementById("password-screen").classList.add("hidden");
+        document.getElementById("main-screen").classList.remove("hidden");
+    } else {
+        alert("パスワードが違います");
+    }
 });
 
+// フォーム表示
+document.getElementById("add-btn").addEventListener("click", () => {
+    document.getElementById("form-area").classList.toggle("hidden");
+});
+
+// 保存処理
+document.getElementById("save-btn").addEventListener("click", () => {
+    const amount = document.getElementById("amount").value;
+    const expire = document.getElementById("expire").value;
+    const code = document.getElementById("code").value;
+
+    if (!amount || !expire || !code) {
+        alert("全て入力してください");
+        return;
+    }
+
+    const data = JSON.parse(localStorage.getItem("giftlist") || "[]");
+
+    data.push({ amount, expire, code });
+    localStorage.setItem("giftlist", JSON.stringify(data));
+
+    alert("保存しました！");
+    document.getElementById("form-area").classList.add("hidden");
+});
+
+// 開く
+document.getElementById("open-btn").addEventListener("click", loadList);
+
 function loadList() {
+    const data = JSON.parse(localStorage.getItem("giftlist") || "[]");
+
     const list = document.getElementById("list");
     list.innerHTML = "";
 
-    let data = JSON.parse(localStorage.getItem("giftList") || "[]");
-
     data.forEach((item, index) => {
         const div = document.createElement("div");
-        div.className = "gift-box";
+        div.className = "item";
 
         div.innerHTML = `
-            <p>金額: ${item.amount} 円</p>
+            <p>金額: ${item.amount}円</p>
             <p>有効期限: ${item.expire}</p>
-            <p class="gift-code">コード: <span class="code-text">${item.code}</span></p>
-            <button class="delete" data-index="${index}">削除</button>
+            <p>コード: <span class="gift-code" data-code="${item.code}">${item.code}</span></p>
+            <button onclick="deleteItem(${index})">削除</button>
         `;
 
         list.appendChild(div);
     });
-
-    // 🔥 コピー処理（ここが大事）
-    document.querySelectorAll(".code-text").forEach(span => {
-        span.addEventListener("click", async () => {
-            const text = span.innerText;
-
-            try {
-                await navigator.clipboard.writeText(text);
-
-                // 📳 iPhone バイブ
-                if (navigator.vibrate) navigator.vibrate(50);
-
-                alert("コピーしました: " + text);
-
-            } catch (e) {
-                alert("コピーに失敗しました");
-            }
-        });
-    });
-
-    // 削除ボタン
-    document.querySelectorAll(".delete").forEach(btn => {
-        btn.addEventListener("click", () => {
-            const index = btn.dataset.index;
-            let data = JSON.parse(localStorage.getItem("giftList") || "[]");
-            data.splice(index, 1);
-            localStorage.setItem("giftList", JSON.stringify(data));
-            loadList();
-        });
-    });
 }
+
+// 削除
+function deleteItem(i) {
+    if (!confirm("本当に削除しますか？")) return;
+
+    const data = JSON.parse(localStorage.getItem("giftlist") || "[]");
+    data.splice(i, 1);
+    localStorage.setItem("giftlist", JSON.stringify(data));
+    loadList();
+}
+
+// コピー対応（iPhone対応版）
+document.addEventListener("click", async (e) => {
+    if (e.target.classList.contains("gift-code")) {
+        const code = e.target.dataset.code;
+
+        try {
+            await navigator.clipboard.writeText(code);
+            navigator.vibrate(100);
+            alert("コピーしました！");
+        } catch {
+            // iPhone用のフォールバック
+            const area = document.createElement("textarea");
+            area.value = code;
+            document.body.appendChild(area);
+            area.select();
+            document.execCommand("copy");
+            document.body.removeChild(area);
+
+            navigator.vibrate(100);
+            alert("コピーしました！");
+        }
+    }
+});
