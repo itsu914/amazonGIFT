@@ -21,6 +21,50 @@ button {
 }
 
 .gift-code {
+    /* 📱 iPhone・スマホ用の表示調整 */
+@media screen and (max-width: 600px) {
+
+    body {
+        padding: 15px;
+        font-size: 18px;
+    }
+
+    input, button {
+        width: 100%;
+        font-size: 18px;
+        padding: 12px;
+        box-sizing: border-box;
+    }
+
+    #password-screen, #main-screen {
+        width: 100%;
+        margin: 0;
+    }
+
+    .gift-item {
+        font-size: 18px;
+        padding: 15px;
+    }
+
+    .gift-code {
+        font-size: 20px;
+        color: blue;
+        cursor: pointer;
+        padding: 5px 0;
+    }
+
+    h2 {
+        font-size: 26px;
+        text-align: center;
+    }
+
+    #add-btn {
+        font-size: 20px;
+        padding: 12px;
+        width: 100%;
+    }
+}
+
     font-weight: bold;
     color: blue;
     cursor: pointer;
