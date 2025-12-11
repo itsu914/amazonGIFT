@@ -1,9 +1,10 @@
-// パスワード固定
+// パスワード
 const PASSWORD = "20110914";
 
 // パスワードチェック
 document.getElementById("password-btn").addEventListener("click", () => {
     const input = document.getElementById("password-input").value;
+
     if (input === PASSWORD) {
         document.getElementById("password-screen").style.display = "none";
         document.getElementById("main-screen").style.display = "block";
@@ -11,6 +12,11 @@ document.getElementById("password-btn").addEventListener("click", () => {
     } else {
         document.getElementById("pw-error").textContent = "パスワードが違います";
     }
+});
+
+// 追加フォーム表示
+document.getElementById("add-btn").addEventListener("click", () => {
+    document.getElementById("add-form").style.display = "block";
 });
 
 // 保存処理
@@ -33,12 +39,7 @@ document.getElementById("save-btn").addEventListener("click", () => {
     document.getElementById("add-form").style.display = "none";
 });
 
-// 追加ボタン
-document.getElementById("add-btn").addEventListener("click", () => {
-    document.getElementById("add-form").style.display = "block";
-});
-
-// ギフト一覧を表示
+// 一覧を表示
 function loadList() {
     const list = JSON.parse(localStorage.getItem("giftList") || "[]");
     const area = document.getElementById("code-list");
@@ -69,11 +70,13 @@ function loadList() {
         });
     });
 
-    // 削除処理
+    // 削除
     document.querySelectorAll(".del").forEach(btn => {
         btn.addEventListener("click", () => {
             const id = btn.dataset.id;
+
             if (confirm("本当に削除しますか？")) {
+                const list = JSON.parse(localStorage.getItem("giftList") || "[]");
                 list.splice(id, 1);
                 localStorage.setItem("giftList", JSON.stringify(list));
                 loadList();
