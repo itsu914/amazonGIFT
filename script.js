@@ -86,3 +86,15 @@ document.addEventListener("click", async (e) => {
         }
     }
 });
+document.getElementById("passwordButton").addEventListener("click", () => {
+    const input = document.getElementById("passwordField").value;
+    const err = document.getElementById("passwordError");
+
+    if (input === PASSWORD) {
+        document.getElementById("passwordScreen").classList.add("hidden");
+        document.getElementById("mainScreen").classList.remove("hidden");
+        loadList();
+    } else {
+        err.textContent = "パスワードが違います";
+    }
+});
