@@ -1,55 +1,83 @@
-// パスワード
+// パスワード固定
 const PASSWORD = "20110914";
 
-// ギフトコードデータ
-const giftCodes = [
-    { code: "ABCD-EFGH-1234" },
-    { code: "WXYZ-9999-AAAA" },
-    { code: "TEST-1111-CODE" }
-];
-
-// ――― パスワード判定 ―――
-document.getElementById("open-btn").addEventListener("click", () => {
+// パスワードチェック
+document.getElementById("password-btn").addEventListener("click", () => {
     const input = document.getElementById("password-input").value;
-
     if (input === PASSWORD) {
         document.getElementById("password-screen").style.display = "none";
-        document.getElementById("code-screen").style.display = "block";
-        showCodes();
+        document.getElementById("main-screen").style.display = "block";
+        loadList();
     } else {
-        document.getElementById("pw-error").innerText = "パスワードが違います";
+        document.getElementById("pw-error").textContent = "パスワードが違います";
     }
 });
 
+// 保存処理
+document.getElementById("save-btn").addEventListener("click", () => {
+    const amount = document.getElementById("amount").value;
+    const expire = document.getElementById("expire").value;
+    const code = document.getElementById("code").value;
 
-// ――― ギフトコード表示 ―――
-function showCodes() {
-    const list = document.getElementById("code-list");
-    list.innerHTML = "";
+    if (!amount || !expire || !code) {
+        alert("全て入力してください");
+        return;
+    }
 
-    giftCodes.forEach(item => {
+    const list = JSON.parse(localStorage.getItem("giftList") || "[]");
+
+    list.push({ amount, expire, code });
+    localStorage.setItem("giftList", JSON.stringify(list));
+
+    loadList();
+    document.getElementById("add-form").style.display = "none";
+});
+
+// 追加ボタン
+document.getElementById("add-btn").addEventListener("click", () => {
+    document.getElementById("add-form").style.display = "block";
+});
+
+// ギフト一覧を表示
+function loadList() {
+    const list = JSON.parse(localStorage.getItem("giftList") || "[]");
+    const area = document.getElementById("code-list");
+    area.innerHTML = "";
+
+    list.forEach((item, index) => {
         const div = document.createElement("div");
-        div.className = "gift-box";
+        div.className = "gift-item";
 
         div.innerHTML = `
-            <p><b>コード:</b> <span class="code-text">${item.code}</span></p>
-            <button class="copy-btn">コピー</button>
+            <p>金額: ¥${item.amount}</p>
+            <p>期限: ${item.expire}</p>
+            <p class="gift-code" data-code="${item.code}">コード: ${item.code}</p>
+            <button class="del" data-id="${index}">削除</button>
         `;
 
-        list.appendChild(div);
+        area.appendChild(div);
     });
 
-    // コピー機能
-    document.querySelectorAll(".copy-btn").forEach((btn, index) => {
-        btn.addEventListener("click", () => {
-            const text = giftCodes[index].code;
-
-            navigator.clipboard.writeText(text).then(() => {
-                // 成功 → バイブ
+    // コードタップでコピー＋バイブ
+    document.querySelectorAll(".gift-code").forEach(el => {
+        el.addEventListener("click", () => {
+            const code = el.dataset.code;
+            navigator.clipboard.writeText(code).then(() => {
                 if (navigator.vibrate) navigator.vibrate(100);
-                btn.innerText = "コピー済み ✔";
-                setTimeout(() => btn.innerText = "コピー", 1500);
+                alert("コピーしました: " + code);
             });
+        });
+    });
+
+    // 削除処理
+    document.querySelectorAll(".del").forEach(btn => {
+        btn.addEventListener("click", () => {
+            const id = btn.dataset.id;
+            if (confirm("本当に削除しますか？")) {
+                list.splice(id, 1);
+                localStorage.setItem("giftList", JSON.stringify(list));
+                loadList();
+            }
         });
     });
 }
