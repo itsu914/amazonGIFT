@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>ギフトコード管理</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- パスワード画面 -->
+    <div id="lockScreen">
+        <h2>パスワードを入力</h2>
+        <input type="password" id="passwordInput" placeholder="パスワード">
+        <button onclick="unlock()">開く</button>
+        <p id="errorMsg"></p>
+    </div>
+
+    <!-- メイン画面 -->
+    <div id="main" class="hidden">
+        <h1>Amazon ギフトコード管理</h1>
+
+        <button id="addBtn" onclick="openForm()">＋ 追加</button>
+
+        <!-- 入力フォーム -->
+        <div id="form" class="hidden formBox">
+            <h3>ギフトコード追加</h3>
+
+            <input id="amount" type="number" placeholder="金額（円）">
+            <input id="code" type="text" placeholder="ギフトコード">
+            <input id="date" type="date">
+
+            <button onclick="addCode()">保存</button>
+            <button onclick="closeForm()">閉じる</button>
+        </div>
+
+        <h2>保存一覧</h2>
+        <div id="list"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
