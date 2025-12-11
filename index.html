@@ -118,8 +118,15 @@ function loadList() {
     const data = JSON.parse(localStorage.getItem("giftStore") || "[]");
     const list = document.getElementById("list");
     list.innerHTML = "";
+    const keyword = document.getElementById("search")?.value || "";
+const filtered = data.filter(item =>
+    item.amount.includes(keyword) ||
+    item.limit.includes(keyword) ||
+    item.code.includes(keyword)
+);
 
-    data.forEach((item, index) => {
+
+    filtered.forEach((item, index) => {
         const div = document.createElement("div");
         div.className = "item";
 
