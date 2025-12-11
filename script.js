@@ -1,95 +1,83 @@
-// パスワード
-const PASSWORD = "20110914";
+document.addEventListener("DOMContentLoaded", () => {
+    loadList();
 
-// ロード時
-window.onload = function () {
-    const pass = prompt("パスワードを入力してください");
-    if (pass !== PASSWORD) {
-        alert("パスワードが違います");
-        location.reload();
-        return;
-    }
+    document.getElementById("add-button").addEventListener("click", () => {
+        const amount = document.getElementById("amount").value;
+        const expire = document.getElementById("expire").value;
+        const code = document.getElementById("code").value;
 
-    loadGiftCodes();
-};
+        if (!amount || !expire || !code) {
+            alert("全て入力してください");
+            return;
+        }
 
-// ギフトコード保存
-function saveGiftCode() {
-    const amount = document.getElementById("amount").value;
-    const expire = document.getElementById("expire").value;
-    const code = document.getElementById("code").value;
+        const password = prompt("パスワードを入力してください");
+        if (password !== "20110914") {
+            alert("パスワードが違います");
+            return;
+        }
 
-    if (!amount || !expire || !code) {
-        alert("すべて入力してください");
-        return;
-    }
+        const item = { amount, expire, code };
 
-    const giftData = JSON.parse(localStorage.getItem("giftCodes") || "[]");
+        let data = JSON.parse(localStorage.getItem("giftList") || "[]");
+        data.push(item);
+        localStorage.setItem("giftList", JSON.stringify(data));
 
-    giftData.push({
-        amount: amount,
-        expire: expire,
-        code: code
+        loadList();
+
+        document.getElementById("amount").value = "";
+        document.getElementById("expire").value = "";
+        document.getElementById("code").value = "";
     });
+});
 
-    localStorage.setItem("giftCodes", JSON.stringify(giftData));
-
-    document.getElementById("amount").value = "";
-    document.getElementById("expire").value = "";
-    document.getElementById("code").value = "";
-
-    loadGiftCodes();
-}
-
-// ギフトコード読み込み
-function loadGiftCodes() {
+function loadList() {
     const list = document.getElementById("list");
     list.innerHTML = "";
 
-    const giftData = JSON.parse(localStorage.getItem("giftCodes") || "[]");
+    let data = JSON.parse(localStorage.getItem("giftList") || "[]");
 
-    giftData.forEach((item, index) => {
+    data.forEach((item, index) => {
         const div = document.createElement("div");
-        div.className = "gift-item";
+        div.className = "gift-box";
 
         div.innerHTML = `
-            <p>金額：${item.amount}</p>
-            <p>有効期限：${item.expire}</p>
-            <p>コード：<span class="gift-code">${item.code}</span></p>
-            <button onclick="deleteGiftCode(${index})">削除</button>
+            <p>金額: ${item.amount} 円</p>
+            <p>有効期限: ${item.expire}</p>
+            <p class="gift-code">コード: <span class="code-text">${item.code}</span></p>
+            <button class="delete" data-index="${index}">削除</button>
         `;
 
         list.appendChild(div);
     });
-}
 
-// 削除
-function deleteGiftCode(index) {
-    if (!confirm("本当に削除しますか？")) return;
+    // 🔥 コピー処理（ここが大事）
+    document.querySelectorAll(".code-text").forEach(span => {
+        span.addEventListener("click", async () => {
+            const text = span.innerText;
 
-    const giftData = JSON.parse(localStorage.getItem("giftCodes") || "[]");
-    giftData.splice(index, 1);
-    localStorage.setItem("giftCodes", JSON.stringify(giftData));
-    loadGiftCodes();
-}
+            try {
+                await navigator.clipboard.writeText(text);
 
-// ---- ▼ iPhone対応：タップでコピー & バイブ ▼ ----
-document.addEventListener("click", async function (e) {
-    if (e.target.classList.contains("gift-code")) {
+                // 📳 iPhone バイブ
+                if (navigator.vibrate) navigator.vibrate(50);
 
-        const codeText = e.target.textContent.trim();
+                alert("コピーしました: " + text);
 
-        try {
-            await navigator.clipboard.writeText(codeText);
-
-            // 振動 (iPhone対応)
-            if ("vibrate" in navigator) {
-                navigator.vibrate(100);
+            } catch (e) {
+                alert("コピーに失敗しました");
             }
+        });
+    });
 
-            alert("コピーしました： " + codeText);
-        } catch (err) {
-            alert("コピーに失敗しました");
-        }
-    }
-});
+    // 削除ボタン
+    document.querySelectorAll(".delete").forEach(btn => {
+        btn.addEventListener("click", () => {
+            const index = btn.dataset.index;
+            let data = JSON.parse(localStorage.getItem("giftList") || "[]");
+            data.splice(index, 1);
+            localStorage.setItem("giftList", JSON.stringify(data));
+            loadList();
+        });
+    });
+}
