@@ -1,7 +1,7 @@
 body {
     font-family: sans-serif;
+    background: #f4f4f4;
     padding: 20px;
-    background: #f3f3f3;
 }
 
 .hidden {
@@ -12,10 +12,6 @@ body {
 #main-screen {
     max-width: 500px;
     margin: auto;
-}
-
-#list {
-    margin-top: 20px;
 }
 
 .item {
