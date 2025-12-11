@@ -1,5 +1,5 @@
 // パスワード
-const PASSWORD = "20110914";
+const PASSWORD = "Itsuki914";
 
 // パスワードチェック
 document.getElementById("password-btn").addEventListener("click", () => {
