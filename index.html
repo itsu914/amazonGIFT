@@ -2,42 +2,38 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>ギフトコード管理</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amazon ギフト管理</title>
     <link rel="stylesheet" href="style.css">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
 <body>
 
-    <!-- パスワード画面 -->
-    <div id="lockScreen">
-        <h2>パスワードを入力</h2>
-        <input type="password" id="passwordInput" placeholder="パスワード">
-        <button onclick="unlock()">開く</button>
-        <p>コード: <span class="gift-code">${item.code}</span></p>
+<div id="password-screen">
+    <h2>パスワード入力</h2>
+    <input type="password" id="password-input" placeholder="パスワードを入力">
+    <button id="password-btn">開く</button>
+</div>
 
+<div id="main-screen" class="hidden">
+
+    <h1>ギフトコード管理</h1>
+
+    <button id="add-btn">➕追加</button>
+    <button id="open-btn">📂 開く</button>
+
+    <div id="form-area" class="hidden">
+        <h2>追加フォーム</h2>
+        <input id="amount" type="number" placeholder="金額">
+        <input id="expire" type="date" placeholder="有効期限">
+        <input id="code" type="text" placeholder="ギフトコード">
+        <button id="save-btn">保存する</button>
     </div>
 
-    <!-- メイン画面 -->
-    <div id="main" class="hidden">
-        <h1>Amazon ギフトコード管理</h1>
+    <div id="list"></div>
 
-        <button id="addBtn" onclick="openForm()">＋ 追加</button>
+</div>
 
-        <!-- 入力フォーム -->
-        <div id="form" class="hidden formBox">
-            <h3>ギフトコード追加</h3>
-
-            <input id="amount" type="number" placeholder="金額（円）">
-            <input id="code" type="text" placeholder="ギフトコード">
-            <input id="date" type="date">
-
-            <button onclick="addCode()">保存</button>
-            <button onclick="closeForm()">閉じる</button>
-        </div>
-
-        <h2>保存一覧</h2>
-        <div id="list"></div>
-    </div>
-
-    <script src="script.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
+
