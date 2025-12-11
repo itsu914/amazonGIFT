@@ -1,4 +1,4 @@
-const PASSWORD = "Itsuki914";
+const PASSWORD = "20110914";
 
 // 画面切り替え
 document.getElementById("password-btn").addEventListener("click", () => {
@@ -92,3 +92,4 @@ document.addEventListener("click", async (e) => {
         }
     }
 });
+
