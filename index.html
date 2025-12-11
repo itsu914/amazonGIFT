@@ -88,10 +88,14 @@
     <button onclick="openList()">開く</button>
 
     <div id="main" style="display:none; margin-top:25px;">
-        <input type="text" id="amount" placeholder="金額" />
-        <input type="date" id="limit" placeholder="有効期限" />
-        <input type="text" id="code" placeholder="ギフトコード" />
-        <button onclick="addCode()">追加</button>
+        <div id="main" style="display:none; margin-top:25px;">
+    <input type="text" id="search" placeholder="検索（例：10円・2025・コード）" oninput="loadList()" />
+
+    <input type="text" id="amount" placeholder="金額" />
+    <input type="date" id="limit" placeholder="有効期限" />
+    <input type="text" id="code" placeholder="ギフトコード" />
+    <button onclick="addCode()">追加</button>
+
 
         <div id="list"></div>
     </div>
